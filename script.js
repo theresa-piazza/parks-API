@@ -1,22 +1,15 @@
-'use strict';
 
 const apiKey = '&api_key=VC6IPQe0Okg2kQWkkh3soEedCuLeFjpGvJj1CgRg'
-const searchUrl = 'https://developer.nps.gov/api/v1/parks?stateCode='
-
-
-//https://developer.nps.gov/api/v1/parks?stateCode=NY&limit=1&api_key=VC6IPQe0Okg2kQWkkh3soEedCuLeFjpGvJj1CgRg
+const searchUrl = 'https://developer.nps.gov/api/v1/parks?'
 
 function getState () {
-  const chosenState = $('#js-state').val() + '&limit=';
-  console.log(chosenState);
-  return chosenState;
-}
-
+  let state = $('#js-state').val(); 
+  return "&stateCode=" + state; 
+  }
 
 function getNumber () {
   const parkAmount = $('#js-max-results').val(); 
-  console.log(parkAmount);
-  return parkAmount;
+  return "limit=" + parkAmount;
 };
 
 
@@ -39,9 +32,9 @@ function displayResults(responseJson) {
 function getParks() {
 let maxResults = getNumber();
 let state = getState();
-console.log(getState);
-  console.log(searchUrl + state + maxResults + apiKey)
-  fetch(searchUrl + state + maxResults + apiKey)
+
+  console.log(searchUrl + maxResults + state + apiKey)
+  fetch(searchUrl + maxResults + state + apiKey)
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -55,20 +48,19 @@ console.log(getState);
 };
 
 
-
 function watchForm() {
 
   $('form').submit(event => {
     console.log("submit happened")
     event.preventDefault();
-
+     
     getParks();
-    console.log(maxResults)
     console.log('Form watched!');
   });
 }
 
 $(watchForm);
+
 
 console.log('App loaded! Waiting for submit!');
 
