@@ -36,16 +36,24 @@ let state = getState();
   console.log(searchUrl + maxResults + state + apiKey)
   fetch(searchUrl + maxResults + state + apiKey)
     .then(response => {
-      if (response.ok) {
-        return response.json();
+      if (!response.ok) {
+        throw new Error(response.statusText);
       }
-      throw new Error(response.statusText);
+      return response.json();
     })
-    .then(responseJson => displayResults(responseJson))
+    .then(responseJson => {
+      if (responseJson.total === '0') {
+        throw new Error('please enter a valid search');
+      }
+      displayResults(responseJson)
+    })
     .catch(err => {
-      $('#js-error-message').text(`Something went wrong: ${err.message}`);
+      console.log(err);
+      $('.error-message').removeClass('hidden');
+      $('.error-message').text(`Something went wrong: ${err.message}`);
     });
 };
+
 
 
 function watchForm() {
